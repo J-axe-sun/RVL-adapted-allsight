@@ -1,10 +1,10 @@
 import os
 import torch
 from torch.utils.data import DataLoader
-from .misc import normalize, unnormalize, normalize_max_min, unnormalize_max_min
+from train.utils.misc import normalize, unnormalize, normalize_max_min, unnormalize_max_min
 import numpy as np
 import cv2
-from .img_utils import circle_mask, _diff, _structure
+from train.utils.img_utils import circle_mask, _diff, _structure
 import pandas as pd
 import random
 from glob import glob
@@ -103,6 +103,9 @@ def get_buffer_paths_sim(leds, indenter):
 def get_inputs_and_targets(group, output_type):
     inputs = [group.iloc[idx].frame for idx in range(group.shape[0])]
     inputs_ref = [group.iloc[idx].ref_frame for idx in range(group.shape[0])]
+
+    inputs = [p.replace('osher/catkin_ws/src/allsight/dataset', f"{pc_name}/RVL-adapted-allsight/allsight_dataset") for p in inputs]
+    inputs_ref = [p.replace('osher/catkin_ws/src/allsight/dataset', f"{pc_name}/RVL-adapted-allsight/allsight_dataset") for p in inputs]
 
     if output_type == 'pixel':
         target = np.array(group.iloc[idx].contact_px for idx in range(group.shape[0]))

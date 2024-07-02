@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 import timm
-from src.allsight.train.utils.datasets import output_map
-import src.allsight.train.utils.contrib.resnets as srn
+from train.utils.datasets import output_map
+#Contrib doesn't exist - import train.utils.contrib.resnets as srn
 import os
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # cuda or cpu
@@ -17,8 +17,8 @@ def get_model(model_params):
     elif model_params['input_type'] == 'with_ref_6c':
         model = PreTrainedModelWithRef(model_params['model_name'], output_map[model_params['output']]).to(device)
 
-    elif model_params['input_type'] == 'with_ref_rnn':
-        model = srn.resnet18(False, False, num_classes=output_map[model_params['output']]).to(device)
+    #elif model_params['input_type'] == 'with_ref_rnn':
+        #Contrib doesn't exist - model = srn.resnet18(False, False, num_classes=output_map[model_params['output']]).to(device)
 
     elif model_params['input_type'] == 'sim_pre_6c':
         model = PreTrainedModelWithRef(model_params['model_name'], output_map['pose']).to(device)

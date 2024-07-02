@@ -6,7 +6,7 @@ from random import randrange
 import cv2
 import matplotlib.pyplot as plt
 from scipy import spatial
-from src.allsight.train.utils.vis_utils import data_for_finger_parametrized
+from train.utils.vis_utils import data_for_finger_parametrized
 
 # Set the backend for matplotlib
 plt.switch_backend('TkAgg')

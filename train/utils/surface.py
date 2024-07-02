@@ -5,7 +5,7 @@ from scipy import spatial
 from .geometry import concatenate_matrices, rotation_matrix
 # from .vis_utils import data_for_cylinder_along_z, data_for_sphere_along_z, set_axes_equal
 
-# src.allsight.train.utils
+# train.utils
 
 origin, xaxis, yaxis, zaxis = (0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1)
 finger_props = [0, 0, 0, 0.016, 0.012]

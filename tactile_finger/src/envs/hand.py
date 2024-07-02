@@ -18,7 +18,7 @@ import cv2
 import numpy as np
 
 
-from src.allsight.tactile_finger.src.envs.finger import Finger
+from tactile_finger.src.envs.finger import Finger
 
 
 class Hand():

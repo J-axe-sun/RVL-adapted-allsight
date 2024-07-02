@@ -46,7 +46,7 @@ class TactileOfflineInferenceFinger:
         :param paths: The paths to the data files.
         :return: The prepared episodes and targets.
         """
-        paths = [p.replace('roblab20', 'osher') for p in paths]
+        paths = [p.replace('roblab20/catkin_ws/src/allsight/dataset', f"{pc_name}/RVL-adapted-allsight/allsight_dataset") for p in paths]
         episodes, targets = [], []
 
         for idx, p in enumerate(paths[:2]):

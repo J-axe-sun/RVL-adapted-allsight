@@ -10,19 +10,19 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 from torchvision.utils import make_grid
 
-from src.allsight.train.utils.misc import normalize, unnormalize, normalize_max_min, unnormalize_max_min, save_df_as_json #, GaussianBlur
-from src.allsight.train.utils.vis_utils import Arrow3D
+from train.utils.misc import normalize, unnormalize, normalize_max_min, unnormalize_max_min, save_df_as_json #, GaussianBlur
+from train.utils.vis_utils import Arrow3D
 import numpy as np
 import pandas as pd
 import cv2
 from sklearn.model_selection import train_test_split
 from torch.optim.lr_scheduler import CosineAnnealingLR, ReduceLROnPlateau, StepLR  # Learning rate schedulers
-from src.allsight.train.utils.models import PreTrainedModel, PreTrainedModelWithRef
-from src.allsight.train.utils.vis_utils import data_for_cylinder_along_z, data_for_sphere_along_z, set_axes_equal
-from src.allsight.train.utils.datasets import TactileDataset, output_map, get_buffer_paths_sim, \
+from train.utils.models import PreTrainedModel, PreTrainedModelWithRef
+from train.utils.vis_utils import data_for_cylinder_along_z, data_for_sphere_along_z, set_axes_equal
+from train.utils.datasets import TactileDataset, output_map, get_buffer_paths_sim, \
     get_buffer_paths
-from src.allsight.train.utils.surface import create_finger_geometry
-from src.allsight.train.utils.geometry import convert_quat_wxyz_to_xyzw, convert_quat_xyzw_to_wxyz
+from train.utils.surface import create_finger_geometry
+from train.utils.geometry import convert_quat_wxyz_to_xyzw, convert_quat_xyzw_to_wxyz
 from transformations import quaternion_matrix
 from scipy import spatial
 from tqdm import tqdm
