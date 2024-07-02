@@ -1,0 +1,3 @@
+[submodule "allsight_dataset"]
+	path = allsight_dataset
+	url = https://github.com/osheraz/allsight_dataset.git
