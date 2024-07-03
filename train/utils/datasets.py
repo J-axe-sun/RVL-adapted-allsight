@@ -330,11 +330,13 @@ class TactileTouchDataset(torch.utils.data.Dataset):
         self.normalize_output = normalize_output
         self.apply_mask = apply_mask
         self.remove_ref = remove_ref
-        self.w, self.h = cv2.imread(df.frame[0])[:2]
+        self.w, self.h = cv2.imread(df.frame[0]).shape[:2]
 
         img_name = params['buffer_name'][0].replace('data', 'img')
-        data_path = f'/home/{pc_name}/catkin_ws/src/allsight/dataset/'
-        ref_path = data_path + f"images/{img_name}/ref_frame.jpg"
+        #data_path = f'/home/{pc_name}/RVL-adapted-allsight/allsight_dataset/data/markers/rrrgggbbb/'
+        #ref_path = data_path + f"images/{img_name}/ref_frame.jpg"
+        ref_path = df.ref_frame[0]
+        print(ref_path)
 
         if self.apply_mask:
             self.mask = circle_mask((self.w, self.h))
