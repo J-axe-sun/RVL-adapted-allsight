@@ -114,12 +114,12 @@ class TactileOfflineInferenceFinger:
 
 if __name__ == "__main__":
     list_dirs = []
-    path_to_dir = f'{os.path.dirname(__file__)}/train/train_history/'
+    path_to_dir = f'{os.path.dirname(os.path.realpath(__file__))}/train/train_history/'
     for path_to_dir, dirs, files in os.walk(path_to_dir):
         for subdir in dirs:
             list_dirs.append(os.path.join(path_to_dir, subdir))
     model_name = 'train_pose_force_pixel_torque_depth_resnet18_sim_pre_6c_aug_meanstd_08-07-2023_19-19-13'
-
+    
     path_to_dir = find_strings_with_substring(list_dirs, model_name)[0] + '/'
 
     # Load data statistics and model params
