@@ -33,11 +33,12 @@ potentially designed for robotic in-hand manipulation tasks.
 
 ## Installation
 
-### 1. Clone repository
+### 1. Clone and setup repository
 
 ```bash
 git clone https://github.com/osheraz/allsight
 cd allsight
+python3 -m venv venv
 ```
 ### 2. Download AllSight-dataset (Optional)
 ```bash

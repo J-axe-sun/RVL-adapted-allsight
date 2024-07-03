@@ -19,7 +19,7 @@ from torch.optim.lr_scheduler import CosineAnnealingLR, ReduceLROnPlateau, StepL
 from utils.models import PreTrainedModel, PreTrainedModelWithRef, PreTrainedModelWithMask, PreTrainedModelWithOnlineMask
 from utils.vis_utils import data_for_cylinder_along_z, data_for_sphere_along_z, set_axes_equal
 from utils.datasets import TactileDataset, output_map, sensor_dict, get_buffer_paths
-import utils.contrib.resnets as srn
+#import utils.contrib.resnets as srn
 from glob import glob
 from utils.surface import create_finger_geometry
 from utils.geometry import convert_quat_wxyz_to_xyzw, convert_quat_xyzw_to_wxyz

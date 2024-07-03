@@ -1,10 +1,10 @@
 import os
 import torch
 from torch.utils.data import DataLoader
-from train.utils.misc import normalize, unnormalize, normalize_max_min, unnormalize_max_min
+from .misc import normalize, unnormalize, normalize_max_min, unnormalize_max_min
 import numpy as np
 import cv2
-from train.utils.img_utils import circle_mask, _diff, _structure
+from .img_utils import circle_mask, _diff, _structure
 import pandas as pd
 import random
 from glob import glob
@@ -54,7 +54,7 @@ def get_buffer_paths(leds, gel, indenter, sensor_id=None):
         leds_list = [leds]
 
     for l in leds_list:
-        paths = [f"/home/{pc_name}/catkin_ws/src/allsight/dataset/{gel}/{l}/data/{ind}" for ind in indenter]
+        paths = [f"/home/{pc_name}/RVL-adapted-allsight/allsight_dataset/{gel}/{l}/data/{ind}" for ind in indenter]
         buffer_paths = []
         summ_paths = []
 
@@ -330,11 +330,13 @@ class TactileTouchDataset(torch.utils.data.Dataset):
         self.normalize_output = normalize_output
         self.apply_mask = apply_mask
         self.remove_ref = remove_ref
-        self.w, self.h = cv2.imread(df.frame[0])[:2]
+        self.w, self.h = cv2.imread(df.frame[0]).shape[:2]
 
         img_name = params['buffer_name'][0].replace('data', 'img')
-        data_path = f'/home/{pc_name}/catkin_ws/src/allsight/dataset/'
-        ref_path = data_path + f"images/{img_name}/ref_frame.jpg"
+        #data_path = f'/home/{pc_name}/RVL-adapted-allsight/allsight_dataset/data/markers/rrrgggbbb/'
+        #ref_path = data_path + f"images/{img_name}/ref_frame.jpg"
+        ref_path = df.ref_frame[0]
+        print(ref_path)
 
         if self.apply_mask:
             self.mask = circle_mask((self.w, self.h))

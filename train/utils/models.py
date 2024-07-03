@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import timm
-from train.utils.datasets import output_map
+from .datasets import output_map
 #Contrib doesn't exist - import train.utils.contrib.resnets as srn
 import os
 

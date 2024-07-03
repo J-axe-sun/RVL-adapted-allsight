@@ -19,7 +19,7 @@ from utils.models import PreTrainedModel, PreTrainedModelWithRef, PreTrainedMode
     PreTrainedModelWithOnlineMask, PreTrainedSimModelWithRef
 from utils.vis_utils import data_for_cylinder_along_z, data_for_sphere_along_z, set_axes_equal
 from utils.datasets import TactileDataset, output_map, get_buffer_paths
-import utils.contrib.resnets as srn
+#import utils.contrib.resnets as srn
 from utils.transforms import get_transforms, inv_normalize
 from utils.surface import create_finger_geometry
 from utils.geometry import convert_quat_xyzw_to_wxyz
