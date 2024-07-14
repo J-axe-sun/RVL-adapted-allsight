@@ -3,4 +3,4 @@
 	url = https://github.com/osheraz/allsight_dataset.git
 [submodule "simulation/allsight_sim"]
 	path = simulation/allsight_sim
-	url = https://github.com/J-axe-sun/allsight_sim.git
+	url = https://github.com/J-axe-sun/allsight-sim.git
