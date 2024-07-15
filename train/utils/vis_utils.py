@@ -25,7 +25,26 @@ from scipy import spatial
 #         FancyArrowPatch.draw(self, renderer)
 
 class Display:
+    """
+    Class to manage and update a 3D visualization display.
+
+    Attributes:
+        statistics (dict): Dictionary containing statistical information.
+        output_type (str): Type of output.
+        fig (matplotlib.figure.Figure): Matplotlib figure object.
+        ax1 (mpl_toolkits.mplot3d.axes3d.Axes3D): Matplotlib 3D axes object.
+        finger_geometry (tuple): Tuple containing finger geometry information.
+        tree (scipy.spatial.KDTree): KDTree for nearest neighbor search.
+    """
     def __init__(self, statistics, output_type):
+        """
+        Initialize the Display object.
+
+        Args:
+            statistics (dict): Dictionary containing statistical information.
+            output_type (str): Type of output (e.g., 'torque', 'depth').
+
+        """
 
         self.statistics = statistics
         self.output_type = output_type
@@ -33,6 +52,13 @@ class Display:
         self.tree = spatial.KDTree(self.finger_geometry[0])
 
     def config_display(self, blit):
+        """
+        Configure the display settings.
+
+        Args:
+            blit (bool): Flag to indicate whether to use blitting.
+
+        """
 
         plt.close('all')
 
@@ -78,6 +104,14 @@ class Display:
         plt.show(block=False)
 
     def update_display(self, y, target=None, blit=True):
+        """
+        Update the display with new data.
+
+        Args:
+            y (np.array): Predicted data.
+            target (np.array, optional): True target data.
+            blit (bool, optional): Flag to indicate whether to use blitting.
+        """
 
         scale = 1500
         pred_pose = y[:3]
@@ -126,11 +160,28 @@ class Display:
 
 
 class Arrow3D(FancyArrowPatch):
+    """
+    Class for a 3D arrow.
+
+    Args:
+        xs (float): X coordinates.
+        ys (float): Y coordinates.
+        zs (float): Z coordinates.
+    """
     def __init__(self, xs, ys, zs, *args, **kwargs):
         super().__init__((0, 0), (0, 0), *args, **kwargs)
         self._verts3d = xs, ys, zs
 
     def do_3d_projection(self, renderer=None):
+        """
+        Perform 3D projection for the arrow.
+
+        Args:
+            renderer (Renderer, optional): Matplotlib renderer.
+
+        Returns:
+            float: Minimum depth of the projection.
+        """
         xs3d, ys3d, zs3d = self._verts3d
         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)
         self.set_positions((xs[0], ys[0]), (xs[1], ys[1]))
@@ -139,13 +190,26 @@ class Arrow3D(FancyArrowPatch):
 
 
 def update_line(hl, new_data):
+    """
+    Update a line in a plot.
+
+    Args:
+        hl (Line3D): Line object to update.
+        new_data (list or tuple): New data for the line.
+    """
     hl.set_xdata(np.asarray(new_data[0]))
     hl.set_ydata(np.asarray(new_data[1]))
     hl.set_3d_properties(np.asarray(new_data[2]))
 
 
 class Annotation3D(Annotation):
-    '''Annotate the point xyz with text s'''
+    """
+    Annotation for 3D points with text.
+
+    Args:
+        s (str): Text to annotate.
+        xyz (tuple): Coordinates of the point.
+    """
 
     def __init__(self, s, xyz, *args, **kwargs):
         Annotation.__init__(self, s, xy=(0, 0), *args, **kwargs)
@@ -159,19 +223,42 @@ class Annotation3D(Annotation):
 
 
 def update_arrow(hl, new_data):
+    """
+    Update an arrow in a plot.
+
+    Args:
+        hl (Arrow3D): Arrow object to update.
+        new_data (list or tuple): New data for the arrow.
+    """
     hl.set_xdata(np.asarray([new_data[0][0], new_data[0][1]]))
     hl.set_ydata(np.asarray([new_data[1][0], new_data[1][1]]))
     hl.set_3d_properties(np.asarray([new_data[2][0], new_data[2][1]]))
 
 
 def annotate3D(ax, s, *args, **kwargs):
-    '''add anotation text s to to Axes3d ax'''
+    """
+    Add 3D annotation to a plot.
+
+    Args:
+        ax (mpl_toolkits.mplot3d.axes3d.Axes3D): Matplotlib 3D axes object.
+        s (str): Text for annotation.
+    """
 
     tag = Annotation3D(s, *args, **kwargs)
     ax.add_artist(tag)
 
 
 def data_for_finger_parametrized(h=0.016 * 1000, r=0.0125 * 1000):
+    """
+    Generate parametrized data for finger geometry.
+
+    Args:
+        h (float): Height parameter.
+        r (float): Radius parameter.
+
+    Returns:
+        tuple: X, Y, Z grid data.
+    """
     H = h + r
 
     def radius(z):
@@ -203,6 +290,18 @@ def data_for_finger_parametrized(h=0.016 * 1000, r=0.0125 * 1000):
 
 
 def data_for_cylinder_along_z(center_x, center_y, radius, height_z):
+    """
+    Generate data for a cylinder along the z-axis.
+
+    Args:
+        center_x (float): X-coordinate of the center.
+        center_y (float): Y-coordinate of the center.
+        radius (float): Radius of the cylinder.
+        height_z (float): Height of the cylinder along the z-axis.
+
+    Returns:
+        tuple: X, Y, Z grid data.
+    """
     z = np.linspace(0, height_z, 2)
     theta = np.linspace(0, 2 * np.pi, 15)
     theta_grid, z_grid = np.meshgrid(theta, z)
@@ -212,6 +311,18 @@ def data_for_cylinder_along_z(center_x, center_y, radius, height_z):
 
 
 def data_for_sphere_along_z(center_x, center_y, radius, height_z):
+    """
+    Generate data for a sphere along the z-axis.
+
+    Args:
+        center_x (float): X-coordinate of the center.
+        center_y (float): Y-coordinate of the center.
+        radius (float): Radius of the sphere.
+        height_z (float): Height of the sphere along the z-axis.
+
+    Returns:
+        tuple: X, Y, Z grid data.
+    """
     q = np.linspace(0, 2 * np.pi, 15)
     p = np.linspace(0, np.pi / 2, 15)
     p_, q_ = np.meshgrid(q, p)
@@ -222,13 +333,14 @@ def data_for_sphere_along_z(center_x, center_y, radius, height_z):
 
 
 def set_axes_equal(ax):
-    '''Make axes of 3D plot have equal scale so that spheres appear as spheres,
+    """
+    Make axes of 3D plot have equal scale so that spheres appear as spheres,
     cubes as cubes, etc..  This is one possible solution to Matplotlib's
     ax.set_aspect('equal') and ax.axis('equal') not working for 3D.
 
     Input
       ax: a matplotlib axis, e.g., as output from plt.gca().
-    '''
+    """
 
     x_limits = ax.get_xlim3d()
     y_limits = ax.get_ylim3d()
@@ -251,6 +363,14 @@ def set_axes_equal(ax):
 
 
 class MousePts:
+    """
+    Class to handle mouse interaction for selecting points in an image.
+
+    Args:
+        windowname (str): Name of the window.
+        img (numpy.array): Image array.
+        rad (int): Radius parameter for drawing circles.
+    """
     def __init__(self, windowname, img, rad):
 
         self.windowname = windowname
@@ -263,6 +383,16 @@ class MousePts:
         self.r = max(min(rad, 50), 5)
 
     def select_point(self, event, x, y, flags, param):
+        """
+        Handle mouse events to select points.
+
+        Args:
+            event (int): Type of mouse event.
+            x (int): X-coordinate of the mouse pointer.
+            y (int): Y-coordinate of the mouse pointer.
+            flags (int): Additional flags.
+            param (object): Additional parameters.
+        """
         if event == cv2.EVENT_LBUTTONDOWN:
             self.point.append([x, y])
             self.img = cv2.circle(self.img, (x, y), self.r, (0, 255, 0), 2)
@@ -274,6 +404,16 @@ class MousePts:
             # cv2.circle(self.img, (x, y), 50, (0, 255, 0), -1)
 
     def getpt(self, count=1, img=None):
+        """
+        Get selected points from the user.
+
+        Args:
+            count (int, optional): Number of points to select.
+            img (numpy.array, optional): Image array.
+
+        Returns:
+            tuple: Selected points and updated image array.
+        """
         if img is not None:
             self.img = img
         else:

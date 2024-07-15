@@ -13,7 +13,7 @@ train/evaluation/
 train/utils/contrib/
 calibration/
 simulation/train_history/
-venv/lib/python3.8/site-packages
+venv
 allsight_dataset
 **.vscode/
 **/*.json

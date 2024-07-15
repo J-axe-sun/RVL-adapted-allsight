@@ -10,6 +10,15 @@ pc_name = os.getlogin()
 
 
 def get_model(model_params):
+    """
+    Create and return a pretrained model based on the provided model parameters.
+
+    Args:
+        model_params (dict): Dictionary containing model parameters including 'input_type', 'model_name', and 'output'.
+
+    Returns:
+        nn.Module or None: Pretrained model based on the input type. Returns None if input type is unknown.
+    """
 
     if model_params['input_type'] == 'single':
         model = PreTrainedModel(model_params['model_name'], output_map[model_params['output']]).to(device)
@@ -38,6 +47,15 @@ def get_model(model_params):
     return model
 
 class PreTrainedModel(nn.Module):
+    """
+    Pretrained model without additional references.
+
+    Args:
+        model_name (str): Name of the pretrained model.
+        num_output (int): Number of output classes.
+        classifier (bool, optional): Whether the model is a classifier (default is False).
+        freeze (bool, optional): Whether to freeze the model's parameters (default is False).
+    """
 
     def __init__(self, model_name, num_output, classifier=False, freeze=False):
         super(PreTrainedModel, self).__init__()
@@ -47,6 +65,17 @@ class PreTrainedModel(nn.Module):
         self.backbone = self.get_model(freeze=freeze, num_classes=num_output, version=model_name).to(device)
 
     def get_model(self, version='resnet18', num_classes=3, freeze=False):
+        """
+        Retrieve a pretrained model from the timm library.
+
+        Args:
+            version (str, optional): Name of the model architecture (default is 'resnet18').
+            num_classes (int, optional): Number of output classes (default is 3).
+            freeze (bool, optional): Whether to freeze the model's parameters (default is False).
+
+        Returns:
+            nn.Module: Pretrained model instance.
+        """
         model = timm.create_model(model_name=version, pretrained=True, num_classes=num_classes)
 
         if freeze:
@@ -71,6 +100,18 @@ class PreTrainedModel(nn.Module):
         return model
 
     def forward(self, images, ref_frame=None, masked_img=None, masked_ref=None):
+        """
+        Forward pass of the model.
+
+        Args:
+            images (torch.Tensor): Input images.
+            ref_frame (torch.Tensor, optional): Reference frame (default is None).
+            masked_img (torch.Tensor, optional): Masked image (default is None).
+            masked_ref (torch.Tensor, optional): Masked reference (default is None).
+
+        Returns:
+            torch.Tensor: Output tensor from the model.
+        """
 
         pred_out = self.backbone(images.to(device))
 
@@ -78,6 +119,15 @@ class PreTrainedModel(nn.Module):
 
 
 class PreTrainedModelWithRef(nn.Module):
+    """
+    Pretrained model with additional reference frame.
+
+    Args:
+        model_name (str): Name of the pretrained model.
+        num_output (int): Number of output classes.
+        classifer (bool, optional): Whether the model is a classifier (default is False).
+        freeze (bool, optional): Whether to freeze the model's parameters (default is False).
+    """
 
     def __init__(self, model_name, num_output, classifer=False, freeze=False):
         super(PreTrainedModelWithRef, self).__init__()
@@ -96,6 +146,17 @@ class PreTrainedModelWithRef(nn.Module):
         self.final = nn.Linear(self.in_feature, num_classess)
 
     def get_model(self, version='resnet18', num_classes=3, freeze=False):
+        """
+        Retrieve a pretrained model from the timm library with modifications for additional inputs.
+
+        Args:
+            version (str, optional): Name of the model architecture (default is 'resnet18').
+            num_classes (int, optional): Number of output classes (default is 3).
+            freeze (bool, optional): Whether to freeze the model's parameters (default is False).
+
+        Returns:
+            nn.Module: Pretrained model instance with modified layers.
+        """
 
         model = timm.create_model(model_name=version, pretrained=True, num_classes=num_classes)
 
@@ -148,6 +209,14 @@ class PreTrainedModelWithRef(nn.Module):
 
 
 class PreTrainedSimModelWithRef(nn.Module):
+    """
+    Pretrained model with simulated data and additional reference frame.
+
+    Args:
+        model (nn.Module): Pretrained model instance.
+        num_output (int): Number of output classes.
+        freeze (bool, optional): Whether to freeze the model's parameters (default is False).
+    """
 
     def __init__(self, model, num_output, freeze=False):
         super(PreTrainedSimModelWithRef, self).__init__()
@@ -169,6 +238,15 @@ class PreTrainedSimModelWithRef(nn.Module):
 
 
 class PreTrainedModelWithMask(nn.Module):
+    """
+    Pretrained model with an additional mask.
+
+    Args:
+        model_name (str): Name of the pretrained model.
+        num_output (int): Number of output classes.
+        classifer (bool, optional): Whether the model is a classifier (default is False).
+        freeze (bool, optional): Whether to freeze the model's parameters (default is False).
+    """
 
     def __init__(self, model_name, num_output, classifer=False, freeze=False):
         super(PreTrainedModelWithMask, self).__init__()
@@ -187,6 +265,17 @@ class PreTrainedModelWithMask(nn.Module):
         self.final = nn.Linear(self.in_feature, num_classess)
 
     def get_model(self, version='resnet18', num_classes=3, freeze=False):
+        """
+        Retrieve a pretrained model from the timm library with modifications for an additional mask.
+
+        Args:
+            version (str, optional): Name of the model architecture (default is 'resnet18').
+            num_classes (int, optional): Number of output classes (default is 3).
+            freeze (bool, optional): Whether to freeze the model's parameters (default is False).
+
+        Returns:
+            nn.Module: Pretrained model instance with modified layers for mask inclusion.
+        """
 
         model = timm.create_model(model_name=version, pretrained=True, num_classes=num_classes)
 
@@ -234,6 +323,15 @@ class PreTrainedModelWithMask(nn.Module):
 
 
 class PreTrainedModelWithOnlineMask(nn.Module):
+    """
+    Pretrained model with online mask addition.
+
+    Args:
+        model_name (str): Name of the pretrained model.
+        num_output (int): Number of output classes.
+        classifer (bool, optional): Whether the model is a classifier (default is False).
+        freeze (bool, optional): Whether to freeze the model's parameters (default is False).
+    """
 
     def __init__(self, model_name, num_output, classifer=False, freeze=False):
         super(PreTrainedModelWithOnlineMask, self).__init__()
@@ -252,6 +350,17 @@ class PreTrainedModelWithOnlineMask(nn.Module):
         self.final = nn.Linear(self.in_feature, num_classess)
 
     def get_model(self, version='resnet18', num_classes=3, freeze=False):
+        """
+        Retrieve a pretrained model from the timm library with modifications for online mask addition.
+
+        Args:
+            version (str, optional): Name of the model architecture (default is 'resnet18').
+            num_classes (int, optional): Number of output classes (default is 3).
+            freeze (bool, optional): Whether to freeze the model's parameters (default is False).
+
+        Returns:
+            nn.Module: Pretrained model instance with modified layers for online mask inclusion.
+        """
 
         model = timm.create_model(model_name=version, pretrained=True, num_classes=num_classes)
 

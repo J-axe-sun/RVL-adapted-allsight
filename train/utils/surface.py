@@ -15,6 +15,13 @@ height = h + r
 
 
 def create_finger_geometry_parametrize(display=True):
+    """Create and optionally display the parametrized geometry of a finger.
+
+    Generates a 3D scatter plot of points representing the finger geometry based on given parameters.
+
+    Args:
+        display (bool, optional): Whether to display the 3D plot. Defaults to True.
+    """
     z = np.linspace(0, height, 30)
     q = np.linspace(0, 2 * np.pi, 30)
 
@@ -40,19 +47,18 @@ def create_finger_geometry_parametrize(display=True):
 
 
 def create_finger_geometry(Nc=50, Mc=10, Mr=10, display=False): #
-    '''Calculate sensor geomtry
+    """
+    Calculate sensor geometry for a finger.
 
-    Parameters
-    ----------
-    Nc : int, optional
-        _description_, by default 30
-    Mc : int, optional
-        _description_, by default 5
-    Mr : int, optional
-        _description_, by default 5
-    display : bool, optional
-        Display geomtry 3d plot, by default False
-    '''
+    Args:
+        Nc (int, optional): Number of divisions along the circumference, default is 50.
+        Mc (int, optional): Number of divisions along the height, default is 10.
+        Mr (int, optional): Number of divisions for the sphere push points, default is 10.
+        display (bool, optional): Whether to display the 3D plot of the finger geometry, default is False.
+
+    Returns:
+        tuple: A tuple containing lists of surface points and their corresponding rotations.
+    """
 
     start_h = 0
     # Init data dictionary

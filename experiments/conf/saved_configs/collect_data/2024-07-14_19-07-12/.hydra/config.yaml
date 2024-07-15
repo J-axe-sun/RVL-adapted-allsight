@@ -1,0 +1,70 @@
+with_bg: true
+show_depth: true
+show_detect: false
+summary:
+  name: collect_data
+  indenter: rect
+  leds: white
+  sensor_id: 12
+  method: press
+  start_from: 25
+  up_to: 30
+  gel: clear
+  angle_split: 14
+  start_random_angle: true
+  cyl_split: 38
+  top_split: 4
+  save: false
+  save_depth: false
+  save_prefix: sensor${summary.sensor_id}_${summary.indenter}
+sim2real:
+  enable: false
+  model_G: ../experiments/models/GAN/170_net_G_B.pth
+  model_R: null
+allsight:
+  tacto:
+    width: 480
+    height: 480
+    visualize_gui: true
+  allsight:
+    urdf_path: ../assets/meshes/allsight.urdf
+    base_position:
+    - 0
+    - 0
+    - 0
+    base_orientation:
+    - 0.0
+    - -0.707106
+    - 0.0
+    - 0.707106
+    use_fixed_base: true
+  sensor_dims:
+    base_h: 0.014
+    cyl_r: 0.013
+    cyl_h: 0.013
+  object:
+    urdf_path: ../assets/objects/sphere3.urdf
+    base_position:
+    - 0
+    - 0
+    - 0.06
+    global_scaling: 1
+    use_fixed_base: false
+  object_control_panel:
+    slider_params:
+      position_low:
+      - -0.3
+      - -0.3
+      - 0
+      position_high:
+      - 0.3
+      - 0.3
+      - 0.3
+  pybullet_camera:
+    cameraDistance: 0.12
+    cameraYaw: 90.0
+    cameraPitch: -45.0
+    cameraTargetPosition:
+    - 0
+    - 0
+    - 0

@@ -34,6 +34,34 @@ pc_name = os.getlogin()
 
 
 class Trainer(object):
+    """
+    A class to handle training of a deep learning model for tactile data.
+
+    Args:
+    params (dict): Parameters dictionary containing various settings for training.
+    model (torch.nn.Module): The deep learning model to be trained.
+    statistics (dict): Statistics dictionary containing data normalization parameters.
+
+    Methods:
+    __init__(params, model, statistics):
+        Initializes the Trainer with given parameters, model, and statistics.
+    
+    prepare_data(paths, output_type):
+        Prepares training, validation, and test datasets from given paths and output type.
+
+    run_training_loop():
+        Runs the training loop over multiple epochs.
+    
+    run_validation_loop(EVAL_COSTS):
+        Runs the validation loop to evaluate model performance.
+    
+    run_test_loop():
+        Runs the test loop to evaluate model performance on unseen data.
+    
+    log_model_predictions(batch_x, batch_x_ref, batch_y, status):
+        Logs model predictions and visualizes inputs and outputs.
+
+    """
 
     def __init__(self, params, model, statistics):
 
@@ -96,6 +124,14 @@ class Trainer(object):
         self.fig = plt.figure(figsize=(20, 15))
 
     def prepare_data(self, paths, output_type):
+        """
+        Prepares training, validation, and test datasets from the given paths and output type.
+
+        Args:
+        paths (list): List of file paths containing the data.
+        output_type (str): Type of output (e.g., 'pixel', 'pose', 'force', 'pose_force').
+
+        """
 
         for idx, p in enumerate(paths):
             if idx == 0:
@@ -178,6 +214,9 @@ class Trainer(object):
         print(f'Test set length is {len(self.testset)}')
 
     def run_training_loop(self):
+        """
+        Runs the training loop over multiple epochs.
+        """
 
         epochs = self.model_params['epoch']
         # init vars at beginning of training
@@ -241,6 +280,16 @@ class Trainer(object):
         self.fig.savefig(self.params['logdir'] + '/train_val_comp.png', dpi=200, bbox_inches='tight')
 
     def run_validation_loop(self, EVAL_COSTS):
+        """
+        Runs the validation loop to evaluate model performance.
+
+        Args:
+        EVAL_COSTS (list): List to store evaluation costs (losses).
+
+        Returns:
+        list: Updated EVAL_COSTS list with validation losses appended.
+
+        """
 
         self.model.eval()
 
@@ -268,6 +317,9 @@ class Trainer(object):
         return EVAL_COSTS
 
     def run_test_loop(self):
+        """
+        Runs the test loop to evaluate model performance on unseen data.
+        """
 
         TEST_COSTS = []
         self.model.eval()
@@ -286,7 +338,16 @@ class Trainer(object):
         self.log_model_predictions(batch_x, batch_x_ref, batch_y, 'test')
 
     def log_model_predictions(self, batch_x, batch_x_ref, batch_y, status):
-        # model predictions
+        """
+        Logs model predictions and visualizes inputs and outputs.
+
+        Args:
+        batch_x (torch.Tensor): Input data batch.
+        batch_x_ref (torch.Tensor): Reference input data batch (for models with reference input).
+        batch_y (torch.Tensor): Ground truth output data batch.
+        status (str): Current status ('train', 'valid', 'test').
+
+        """
 
         self.model.eval()
 
@@ -459,6 +520,23 @@ class Trainer(object):
 
 
 def main():
+    """
+    Main function to initiate training and testing of the deep learning model.
+
+    Command-line arguments:
+    --epoch, -ep (int): Number of epochs for training.
+    --portion, -pr (float): Portion of the dataset to use for training.
+    --aug, -aug (bool): Whether to use data augmentation during training.
+    --scheduler, -sch (str): Type of learning rate scheduler to use ('none', 'reduce', 'cosine', 'step').
+    --image_size, -iz (int): Size of input images.
+    --batch_size, -b (int): Batch size for training and testing.
+    --learning_rate, -lr (float): Learning rate for the optimizer.
+    --dropout, -dp (float): Dropout rate for regularization (not used in the current implementation).
+    --seed (int): Random seed for reproducibility (not used in the current implementation).
+    --use_gpu, -gpu (bool): Whether to use GPU for training (not used in the current implementation).
+    --which_gpu (int): Index of the GPU to use (not used in the current implementation).
+
+    """
     warnings.filterwarnings("ignore")
 
     import argparse

@@ -11,6 +11,18 @@ inv_normalize = transforms.Normalize(
 
 
 def get_transforms(im_size):
+    """
+    Get transformations for training, augmentation, and testing images.
+
+    Args:
+        im_size (int): Size of the input images after resizing.
+
+    Returns:
+        tuple: A tuple containing three torchvision transforms:
+               - train_transform: Transformations for training images.
+               - aug_transform: Augmentation transformations.
+               - test_transform: Transformations for testing images.
+    """
     train_transform = transforms.Compose([
         transforms.ToPILImage(),
         transforms.Resize((im_size, im_size)),
@@ -53,45 +65,103 @@ def get_transforms(im_size):
 import torchvision.transforms.functional as TF
 
 class ToGrayscale(object):
-    """Convert image to grayscale version of image."""
+    """
+    Convert image to grayscale version of image.
+
+    Args:
+        num_output_channels (int, optional): Number of channels for the output image. Default is 1.
+    """
 
     def __init__(self, num_output_channels=1):
         self.num_output_channels = num_output_channels
 
     def __call__(self, img):
+        """
+        Apply grayscale conversion to the input image.
+
+        Args:
+            img (PIL.Image): Input image.
+
+        Returns:
+            PIL.Image: Grayscale version of the input image.
+        """
         return TF.to_grayscale(img, self.num_output_channels)
 
 
 class AdjustGamma(object):
-    """Perform gamma correction on an image."""
+    """
+    Perform gamma correction on an image.
+
+    Args:
+        gamma (float): Non-negative real number, gamma value for correction.
+        gain (float, optional): Multiplicative factor. Default is 1.
+    """
 
     def __init__(self, gamma, gain=1):
         self.gamma = gamma
         self.gain = gain
 
     def __call__(self, img):
+        """
+        Apply gamma correction to the input image.
+
+        Args:
+            img (PIL.Image): Input image.
+
+        Returns:
+            PIL.Image: Image after gamma correction.
+        """
         return TF.adjust_gamma(img, self.gamma, self.gain)
 
 
 
 class GaussianBlur(object):
-    """Gaussian blur augmentation in SimCLR https://arxiv.org/abs/2002.05709"""
+    """
+    Gaussian blur augmentation in SimCLR https://arxiv.org/abs/2002.05709
+
+    Args:
+        sigma (list or tuple): Range [min_sigma, max_sigma] for blur radius.
+
+    """
 
     def __init__(self, sigma=[.1, 2.]):
         self.sigma = sigma
 
     def __call__(self, x):
+        """
+        Apply Gaussian blur to the input image.
+
+        Args:
+            x (PIL.Image): Input image.
+
+        Returns:
+            PIL.Image: Image after Gaussian blur.
+        """
         sigma = random.uniform(self.sigma[0], self.sigma[1])
         x = x.filter(ImageFilter.GaussianBlur(radius=sigma))
         return x
 
 class TwoCropsTransform:
-    """Take two random crops of one image as the query and key."""
+    """
+    Take two random crops of one image as the query and key.
+
+    Args:
+        base_transform (callable): Transformations to apply to the image before cropping.
+    """
 
     def __init__(self, base_transform):
         self.base_transform = base_transform
 
     def __call__(self, x):
+        """
+        Apply two random crops to the input image.
+
+        Args:
+            x (torch.Tensor): Input image tensor.
+
+        Returns:
+            torch.Tensor: Concatenation of two cropped versions of the input image.
+        """
         q = self.base_transform(x)
         k = self.base_transform(x)
         return torch.cat([q, k], dim=0)

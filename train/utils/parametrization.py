@@ -12,6 +12,14 @@ H = h + r
 
 
 def radius(z):
+    """Calculate the radius of the cylinder at a given z-coordinate.
+
+    Args:
+        z (float or numpy.ndarray): Z-coordinate(s) where radius is to be evaluated.
+
+    Returns:
+        float or numpy.ndarray: Radius of the cylinder at the specified z-coordinate(s).
+    """
     if z < h:
         return r
     else:
@@ -19,6 +27,14 @@ def radius(z):
 
 
 def radius_dz(z):
+    """Calculate the derivative of radius with respect to z.
+
+    Args:
+        z (float or numpy.ndarray): Z-coordinate(s) where derivative is to be evaluated.
+
+    Returns:
+        float or numpy.ndarray: Derivative of the radius with respect to z.
+    """
     if z < h:
         return 0
     else:

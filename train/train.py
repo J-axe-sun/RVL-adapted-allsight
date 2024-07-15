@@ -34,6 +34,30 @@ pc_name = os.getlogin()
 
 
 class Trainer(object):
+    """
+    Trainer class for training and evaluating the deep learning model.
+
+    Args:
+        params (dict): Dictionary containing various parameters for model training.
+
+    Attributes:
+        model_params (dict): Dictionary containing model-specific parameters.
+        finger_geometry (tuple): Tuple containing finger geometry data.
+        tree (scipy.spatial.KDTree): KDTree object for spatial queries.
+        train_transform (torchvision.transforms.Compose): Transformations applied to training data.
+        aug_transform (torchvision.transforms.Compose): Augmentation transformations applied to training data.
+        test_transform (torchvision.transforms.Compose): Transformations applied to test data.
+        cleanset (TactileDataset): Dataset object for training data.
+        trainset (torch.utils.data.Dataset): Dataset object for training (with or without augmentation).
+        validset (TactileDataset): Dataset object for validation data.
+        testset (TactileDataset): Dataset object for test data.
+        trainloader (torch.utils.data.DataLoader): DataLoader object for training data.
+        validloader (torch.utils.data.DataLoader): DataLoader object for validation data.
+        testloader (torch.utils.data.DataLoader): DataLoader object for test data.
+        optimizer (torch.optim.Optimizer): Optimizer object for training the model.
+        scheduler (torch.optim.lr_scheduler._LRScheduler): Learning rate scheduler object.
+        fig (matplotlib.figure.Figure): Figure object for plotting.
+    """
 
     def __init__(self, params):
 
@@ -131,6 +155,17 @@ class Trainer(object):
         self.fig = plt.figure(figsize=(20, 15))
 
     def prepare_data(self, paths, test_paths, output_type):
+        """
+        Prepare datasets for training, validation, and testing.
+
+        Args:
+            paths (list): List of paths to training data.
+            test_paths (list): List of paths to test data.
+            output_type (str): Type of output expected from the model.
+
+        Returns:
+            None
+        """
 
         # for idx, p in enumerate(paths):
         #     if idx == 0:
@@ -194,6 +229,12 @@ class Trainer(object):
         print(f'Train/Valid/Test sets lengths are {len(self.trainset)}/{len(self.validset)}/{len(self.testset)}')
 
     def run_training_loop(self):
+        """
+        Run the training loop for the deep learning model.
+
+        Returns:
+            None
+        """
 
         epochs = self.model_params['epoch']
         self.min_valid_loss = np.inf
@@ -253,6 +294,15 @@ class Trainer(object):
         self.fig.savefig(self.params['logdir'] + '/train_val_comp.png', dpi=200, bbox_inches='tight')
 
     def run_validation_loop(self, EVAL_COSTS):
+        """
+        Run the validation loop for the deep learning model.
+
+        Args:
+            EVAL_COSTS (list): List to store evaluation costs.
+
+        Returns:
+            list: Updated list of evaluation costs.
+        """
 
         self.model.eval()
 
@@ -280,6 +330,12 @@ class Trainer(object):
         return EVAL_COSTS
 
     def run_test_loop(self):
+        """
+        Run the test loop for the deep learning model.
+
+        Returns:
+            None
+        """
 
         TEST_COSTS = []
         self.model.eval()
@@ -300,7 +356,20 @@ class Trainer(object):
         # plt.close("all")
 
     def log_model_predictions(self, batch_x, batch_x_ref, batch_masked_img, batch_masked_ref, batch_y, status):
-        # model predictions
+        """
+        Log predictions of the model during training, validation, or testing.
+
+        Args:
+            batch_x: Input batch for the model.
+            batch_x_ref: Reference input batch for the model.
+            batch_masked_img: Masked image input batch for the model.
+            batch_masked_ref: Masked reference input batch for the model.
+            batch_y: Target batch for the model.
+            status (str): Status indicating whether it's training, validation, or testing.
+
+        Returns:
+            None
+        """
 
         self.model.eval()
 

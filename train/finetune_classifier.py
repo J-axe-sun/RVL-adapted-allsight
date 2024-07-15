@@ -28,6 +28,16 @@ np.set_printoptions(formatter=dict(int=lambda x: f'{x:3}'))  # to widen the prin
 pc_name = 'osher'
 
 class TouchDataset(torch.utils.data.Dataset):
+    """
+    Dataset class for handling touch data.
+    
+    Args:
+        params (dict): Parameters dictionary.
+        df (pandas.DataFrame): DataFrame containing image paths and labels.
+        transform (callable, optional): Optional transform to be applied to the images.
+        apply_mask (bool, optional): Whether to apply a mask to the images.
+        remove_ref (bool, optional): Whether to remove reference frame from images.
+    """
 
     def __init__(self, params, df, transform=None, apply_mask=True, remove_ref=False):
         self.df = df
@@ -66,6 +76,14 @@ class TouchDataset(torch.utils.data.Dataset):
 
 
 class Trainer(object):
+    """
+    Trainer class for training a deep learning model.
+
+    This class handles the training loop, validation loop, and model logging.
+
+    Args:
+        params (dict): Parameters dictionary.
+    """
 
     def __init__(self, params):
 
@@ -122,10 +140,31 @@ class Trainer(object):
         self.fig = plt.figure(figsize=(15, 10))
 
     def accuracy(self, outputs, labels):
+        """
+        Accuracy computation function for binary classification.
+
+        This function computes the accuracy of predictions compared to ground truth labels.
+
+        Args:
+            outputs (torch.Tensor): Predicted outputs.
+            labels (torch.Tensor): Ground truth labels.
+
+        Returns:
+            torch.Tensor: Accuracy value.
+        """
         preds = torch.round(outputs.data)  # torch.round(outputs)
         return torch.tensor(torch.sum(preds == labels).item() / len(preds))
 
     def prepare_data(self, path_wo, path_w):
+        """
+        Prepares data for training and validation.
+
+        This function prepares data by reading JSON files, creating datasets, and defining data loaders.
+
+        Args:
+            path_wo (str): Path to JSON file containing data without touch.
+            path_w (str): Path to JSON file containing data with touch.
+        """
 
         df_data_wo_touch = pd.read_json(path_wo).transpose()
         df_data_wo_touch['touch'] = 0
@@ -169,6 +208,12 @@ class Trainer(object):
         print(f'Train set length is {len(self.trainset)}')
 
     def run_training_loop(self):
+        """
+        Runs the training loop.
+
+        This function executes the training loop for a specified number of epochs.
+
+        """
 
         epochs = self.model_params['epoch']
         # init vars at beginning of training
@@ -247,6 +292,18 @@ class Trainer(object):
         plt.close("all")
 
     def run_validation_loop(self, EVAL_COSTS, EVAL_ACC):
+        """
+        Runs the validation loop.
+
+        This function executes the validation loop after each training epoch.
+
+        Args:
+            EVAL_COSTS (list): List to store evaluation costs.
+            EVAL_ACC (list): List to store evaluation accuracies.
+
+        Returns:
+            tuple: Updated lists of evaluation costs and accuracies.
+        """
 
         self.model.eval()
         BATCH_SIZE = self.model_params['batch_size']
@@ -287,6 +344,16 @@ class Trainer(object):
         return EVAL_COSTS, EVAL_ACC
 
     def log_model_predictions(self, batch_x, batch_y):
+        """
+        Logs model predictions and visualizes them.
+
+        This function logs model predictions and creates visualizations of input images with ground truth
+        and predicted labels.
+
+        Args:
+            batch_x (torch.Tensor): Batch of input images.
+            batch_y (torch.Tensor): Batch of ground truth labels.
+        """
         # model predictions
         self.fig = plt.figure(figsize=(15, 10))
 

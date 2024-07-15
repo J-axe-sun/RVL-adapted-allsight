@@ -42,6 +42,20 @@ sensor_dict = {'markers': {'rrrgggbbb': [2, 1, 0, 11],
 
 
 def get_buffer_paths(leds, gel, indenter, sensor_id=None):
+    """
+    Helper function to retrieve buffer paths for training and testing datasets.
+
+    Args:
+        leds (str): Type of LEDs to consider.
+        gel (str): Gel type for dataset.
+        indenter (list): List of indenters to consider.
+        sensor_id (int, optional): Specific sensor ID to filter buffers (default: None).
+
+    Returns:
+        tuple: Tuple containing lists of buffer paths for training and testing, 
+            and sets of trained and test sensor IDs.
+
+    """
     trained_sensor_id = []
     test_sensor_id = []
 
@@ -85,6 +99,17 @@ def get_buffer_paths(leds, gel, indenter, sensor_id=None):
 
 
 def get_buffer_paths_sim(leds, indenter):
+    """
+    Helper function to retrieve buffer paths for simulated datasets.
+
+    Args:
+        leds (str): Type of LEDs to consider.
+        indenter (list): List of indenters to consider.
+
+    Returns:
+        list: List of buffer paths for simulated datasets.
+
+    """
     if leds == 'combined':
         leds_list = ['rrrgggbbb', 'rgbrgbrgb', 'white']
     else:
@@ -101,6 +126,17 @@ def get_buffer_paths_sim(leds, indenter):
 
 
 def get_inputs_and_targets(group, output_type):
+    """
+    Helper function to retrieve input images and target outputs from a pandas DataFrame.
+
+    Args:
+        group (pd.DataFrame): Group of data from the dataset.
+        output_type (str): Type of output desired ('pixel', 'force', 'force_torque', etc.).
+
+    Returns:
+        tuple: Tuple containing lists of input images, reference images, and target outputs.
+
+    """
     inputs = [group.iloc[idx].frame for idx in range(group.shape[0])]
     inputs_ref = [group.iloc[idx].ref_frame for idx in range(group.shape[0])]
 
@@ -156,6 +192,19 @@ def get_inputs_and_targets(group, output_type):
 
 
 class TactileDataset(torch.utils.data.Dataset):
+    """
+    Dataset class for handling tactile sensor data.
+
+    Args:
+        params (dict): Parameters for dataset initialization.
+        df (pd.DataFrame): DataFrame containing dataset information.
+        output_type (str, optional): Type of output desired (default: 'pose_force_pixel').
+        transform (callable, optional): Optional transform to be applied to the data.
+        apply_mask (bool, optional): Whether to apply a mask to the images (default: False).
+        remove_ref (bool, optional): Whether to remove reference frame from input images (default: False).
+        statistics (dict, optional): Statistics for normalizing the target outputs (default: None).
+
+    """
     def __init__(self, params, df, output_type='pose_force_pixel',
                  transform=None, apply_mask=False, remove_ref=False, statistics=None):
 
@@ -194,9 +243,26 @@ class TactileDataset(torch.utils.data.Dataset):
         self.data_statistics = {'mean': self.y_mean, 'std': self.y_std, 'max': self.y_max, 'min': self.y_min}
 
     def __len__(self):
+        """
+        Returns the length of the dataset.
+
+        Returns:
+            int: Length of the dataset.
+
+        """
         return len(self.df)
 
     def __getitem__(self, idx):
+        """
+        Retrieves an item from the dataset based on index `idx`.
+
+        Args:
+            idx (int): Index of the item to retrieve.
+
+        Returns:
+            tuple: Tuple containing input images, reference images, and target outputs.
+
+        """
 
         img = cv2.imread(self.X[idx])
         ref_img = cv2.imread(self.X_ref[idx])
@@ -240,6 +306,19 @@ class TactileDataset(torch.utils.data.Dataset):
 
 
 class TactileSimDataset(torch.utils.data.Dataset):
+    """
+    Dataset class for handling simulated tactile sensor data.
+
+    Args:
+        params (dict): Parameters for dataset initialization.
+        df (pd.DataFrame): DataFrame containing dataset information.
+        output_type (str, optional): Type of output desired (default: 'pose').
+        transform (callable, optional): Optional transform to be applied to the data.
+        apply_mask (bool, optional): Whether to apply a mask to the images (default: True).
+        remove_ref (bool, optional): Whether to remove reference frame from input images (default: False).
+        statistics (dict, optional): Statistics for normalizing the target outputs (default: None).
+
+    """
     def __init__(self, params, df, output_type='pose',
                  transform=None, apply_mask=True, remove_ref=False, statistics=None):
 
@@ -280,9 +359,26 @@ class TactileSimDataset(torch.utils.data.Dataset):
         self.data_statistics = {'mean': self.y_mean, 'std': self.y_std, 'max': self.y_max, 'min': self.y_min}
 
     def __len__(self):
+        """
+        Returns the length of the dataset.
+
+        Returns:
+            int: Length of the dataset.
+
+        """
         return len(self.df)
 
     def __getitem__(self, idx):
+        """
+        Retrieves an item from the dataset based on index `idx`.
+
+        Args:
+            idx (int): Index of the item to retrieve.
+
+        Returns:
+            tuple: Tuple containing input images, reference images, and target outputs.
+
+        """
 
         img = cv2.imread(self.dir_path + self.X[idx])
         ref_img = cv2.imread(self.dir_path + self.X_ref[idx])
@@ -320,6 +416,19 @@ class TactileSimDataset(torch.utils.data.Dataset):
 
 
 class TactileTouchDataset(torch.utils.data.Dataset):
+    """
+    Dataset class for handling tactile touch sensor data.
+
+    Args:
+        params (dict): Parameters for dataset initialization.
+        df (pd.DataFrame): DataFrame containing dataset information.
+        output_type (str): Type of output desired ('pixel', 'force', 'touch_detect', etc.).
+        transform (callable, optional): Optional transform to be applied to the data.
+        normalize_output (bool, optional): Whether to normalize the output (default: False).
+        apply_mask (bool, optional): Whether to apply a mask to the images (default: True).
+        remove_ref (bool, optional): Whether to remove reference frame from input images (default: False).
+
+    """
 
     def __init__(self, params, df, output_type,
                  transform=None, normalize_output=False, apply_mask=True, remove_ref=False):
@@ -356,9 +465,26 @@ class TactileTouchDataset(torch.utils.data.Dataset):
         self.data_statistics = None
 
     def __len__(self):
+        """
+        Returns the length of the dataset.
+
+        Returns:
+            int: Length of the dataset.
+
+        """
         return len(self.df)
 
     def __getitem__(self, idx):
+        """
+        Retrieves an item from the dataset based on index `idx`.
+
+        Args:
+            idx (int): Index of the item to retrieve.
+
+        Returns:
+            tuple: Tuple containing input images and target outputs.
+
+        """
 
         img = cv2.imread(self.X[idx])
         # ref_img = cv2.imread(self.X_ref[idx])
