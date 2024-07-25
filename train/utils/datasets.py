@@ -98,7 +98,7 @@ def get_buffer_paths(leds, gel, indenter, sensor_id=None):
     return buffer_paths_to_train, buffer_paths_to_test, list(set(trained_sensor_id)), list(set(test_sensor_id))
 
 
-def get_buffer_paths_sim(leds, indenter):
+def get_buffer_paths_sim(parent, leds, indenter):
     """
     Helper function to retrieve buffer paths for simulated datasets.
 
@@ -117,7 +117,7 @@ def get_buffer_paths_sim(leds, indenter):
 
     buffer_paths = []
     for l in leds_list:
-        paths = [f"/home/roblab20/allsight_sim/experiments/dataset/{l}/data/{ind}" for ind in indenter]
+        paths = [f"{parent}/{l}/data/{ind}" for ind in indenter]
 
         for p in paths:
             buffer_paths += [y for x in os.walk(p) for y in glob(os.path.join(x[0], '*.json'))]
@@ -330,7 +330,7 @@ class TactileSimDataset(torch.utils.data.Dataset):
         self.apply_mask = apply_mask
         self.remove_ref = remove_ref
         self.w, self.h = 480, 480
-        self.dir_path = '/home/roblab20/allsight_sim/experiments/'
+        self.dir_path = '/home/jackson/RVL-adapted-allsight/simulation/allsight_sim/experiments'
 
         self.X = [df.iloc[idx].frame for idx in range(self.df.shape[0])]
         self.X_ref = ['/'.join(df.iloc[0].frame.split('/')[:-1]) + '/ref_frame.jpg' for idx in range(self.df.shape[0])]
@@ -343,7 +343,7 @@ class TactileSimDataset(torch.utils.data.Dataset):
             self.X_ref = [f.replace('osher', 'roblab20') for f in self.X_ref]
 
         # define the labels
-        self.Y = np.array([df.iloc[idx].pose[0][:3] for idx in range(self.df.shape[0])])
+        self.Y = np.array([df.iloc[idx].pose_transformed[0][:3] for idx in range(self.df.shape[0])])
 
         if statistics is None:
             self.y_mean = self.Y.mean(axis=0)
@@ -380,8 +380,8 @@ class TactileSimDataset(torch.utils.data.Dataset):
 
         """
 
-        img = cv2.imread(self.dir_path + self.X[idx])
-        ref_img = cv2.imread(self.dir_path + self.X_ref[idx])
+        img = cv2.imread(self.dir_path + "/" + self.X[idx])
+        ref_img = cv2.imread(self.dir_path + "/" + self.X_ref[idx])
 
         if self.remove_ref:
             img = img - ref_img

@@ -40,10 +40,11 @@ class Trainer(object):
         # Get params, create logger
         self.params = params
 
+        parent = params['training_data_path']
         leds = params['leds']
         indenter = ['sphere3', 'sphere4', 'sphere5', 'cube', 'rect', 'ellipse']
 
-        buffer_paths_to_train = get_buffer_paths_sim(leds, indenter)
+        buffer_paths_to_train = get_buffer_paths_sim(parent, leds, indenter)
 
         #####################
         ## SET AGENT PARAMS
@@ -465,6 +466,7 @@ def main():
     parser.add_argument('--model_name', '-mn', type=str, default='resnet18')
     parser.add_argument('--input_type', '-it', type=str, default='with_ref_6c')
     parser.add_argument('--leds', '-ld', type=str, default='combined')
+    parser.add_argument('--training_data_path', type=str, default=None)
 
     parser.add_argument('--norm_method', '-im', type=str, default='meanstd')
     parser.add_argument('--aug', '-aug', default=True)
@@ -497,8 +499,11 @@ def main():
     ### CREATE DIRECTORY FOR LOGGING
     ##################################
 
+    leds = params['leds']
+    params['training_data_path'] = '/home/jackson/RVL-adapted-allsight/simulation/allsight_sim/experiments/allsight_sim_dataset/clear'
+
     data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                             'train_history/{}/'.format(params['leds']))
+                             'allsight_sim/experiments/allsight_sim_dataset/clear/{}/'.format(params['leds']))
 
     if not (os.path.exists(data_path)):
         os.makedirs(data_path)
@@ -508,7 +513,7 @@ def main():
     logdir += '_' + params['input_type']
     logdir += '_aug' if params['aug'] else ''
     logdir += '_' + time.strftime("%d-%m-%Y_%H-%M-%S")
-    logdir = os.path.join(data_path, logdir)
+    logdir = os.path.join(f"{os.path.dirname(__file__)}/train_history/{leds}", logdir)
     params['logdir'] = logdir
 
     if not (os.path.exists(logdir)):

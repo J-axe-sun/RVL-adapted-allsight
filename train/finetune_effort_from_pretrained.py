@@ -493,10 +493,7 @@ def main():
     ##################################
 
     conf = [
-        # ['rrrgggbbb', 'train_pose_force_pixel_torque_depth_resnet18_sim_pre_6c_meanstd_23-06-2023_02-39-04'],
-        ['rrrgggbbb', 'train_pose_force_pixel_torque_depth_resnet18_sim_pre_6c_meanstd_26-06-2023_19-09-08'],
-        # ['rgbrgbrgb', 'train_pose_force_pixel_torque_depth_resnet18_sim_pre_6c_meanstd_23-06-2023_07-30-46'],
-        # ['white', 'train_pose_force_pixel_torque_depth_resnet18_sim_pre_6c_meanstd_23-06-2023_12-56-39'],
+        ['rrrgggbbb', 'train_pose_force_pixel_torque_depth_resnet18_sim_pre_6c_aug_meanstd_08-07-2023_19-19-13'],
     ]
 
     for m in conf:

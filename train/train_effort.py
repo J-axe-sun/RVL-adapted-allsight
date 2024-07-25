@@ -570,7 +570,7 @@ def main():
     ##################################
 
     options = [
-        ['rrrgggbbb', 'clear', False, 9, 'with_ref_6c'],
+        ['rrrgggbbb', 'clear', False, 10, 'single'],
         # ['rrrgggbbb', 'markers', True, 2, 'with_mask_8c'],
         # ['rrrgggbbb', 'markers', False, 2, 'with_mask_7c'],
         # ['rrrgggbbb', 'markers', True, 2, 'with_mask_7c'],

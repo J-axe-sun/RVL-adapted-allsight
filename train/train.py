@@ -554,7 +554,7 @@ def main():
     parser.add_argument('--scheduler', '-sch', type=str, default='none')
 
     parser.add_argument('--image_size', '-iz', type=int, default=224)
-    parser.add_argument('--batch_size', '-b', type=int, default=16)
+    parser.add_argument('--batch_size', '-b', type=int, default=64)
     parser.add_argument('--train_size', '-ts', type=int, default=50000) # 12
     parser.add_argument('--learning_rate', '-lr', type=float, default=0.001)
     parser.add_argument('--dropout', '-dp', type=float, default=0.)
@@ -582,7 +582,7 @@ def main():
     ##################################
 
     options = [
-        ['rrrgggbbb', 'markers', True, 'sim_pre_6c'],
+        ['rrrgggbbb', 'markers', True, 'single'],
         # ['rgbrgbrgb', 'clear', False, 'sim_pre_6c'],
         # ['white', 'clear', False, 'sim_pre_6c'],
         # ['rrrgggbbb', 'markers', False, 'sim_pre_6c'],

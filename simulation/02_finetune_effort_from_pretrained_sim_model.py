@@ -71,7 +71,7 @@ class Trainer(object):
 
         leds = params['leds']
         gel = 'clear'
-        indenter = ['20', '30', '40']
+        indenter = ['sphere3', 'sphere4', 'sphere5']
 
         buffer_paths_to_train, _, _, _ = get_buffer_paths(leds, gel, indenter)
 
@@ -575,13 +575,13 @@ def main():
     ##################################
 
     conf = [
-        ['rrrgggbbb', 'train_pose_resnet18_with_ref_6c_aug_15-06-2023_14-49-11'],
+        ['rrrgggbbb', 'train_pose_resnet18_with_ref_6c_aug_17-07-2024_13-38-18'],
     ]
 
     for m in conf:
 
         leds = m[0]
-        path_to_dir = f'/home/{pc_name}/catkin_ws/src/allsight/simulation/train_history/{leds}/'
+        path_to_dir = f'{os.path.dirname(__file__)}/train_history/{leds}/'
         path_to_dir += m[1] + '/'
 
         # Load data statistics and model params

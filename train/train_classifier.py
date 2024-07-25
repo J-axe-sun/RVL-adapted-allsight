@@ -1,6 +1,5 @@
 import time
 import os
-import glob
 import sys
 import json
 import matplotlib.pyplot as plt
@@ -40,15 +39,14 @@ class Trainer(object):
         #####################
         ## SET AGENT PARAMS
         #####################
-       
-        buffer_names = ['ellipse/data_2023_06_19-02:00:55',
-                        'ellipse/data_2023_06_19-02:48:53',]
 
-        main_data_path = "/home/jackson/RVL-adapted-allsight/allsight_dataset/markers/rrrgggbbb/data/ellipse"
-        #buffer_paths = [f"/home/{pc_name}/RVL-adapted-allsight/allsight_dataset/data/{bf}/{bf}_transformed_annotated.json" for bf in buffer_names]
-        buffer_paths = [os.path.join(root, file) for root, dirs, files in os.walk(main_data_path) for file in files if file.endswith("transformed_annotated.json")]
-        
-        
+        buffer_names = ['data_2023_02_02-05:21:12',
+                        'data_2023_02_02-10:34:06',
+                        'data_2023_02_02-11:46:32',
+                        'data_2023_02_02-12:36:56']
+
+        buffer_paths = [f"/home/{pc_name}/catkin_ws/src/allsight/dataset/data/" \
+                        f"{bf}/{bf}_transformed_annotated.json" for bf in buffer_names]
 
         self.model_params = {
             'learning_rate': params['learning_rate'],
@@ -67,7 +65,7 @@ class Trainer(object):
             'output': params['output']
         }
 
-        self.prepare_data(buffer_paths, params['output'], finetune=False)
+        self.prepare_data(buffer_paths, params['output'], finetune=True)
 
         self.model = PreTrainedModel(params['model_name'], output_map[params['output']], classifer=True)
         self.model.to(device)
@@ -107,14 +105,12 @@ class Trainer(object):
                 df_data = pd.read_json(p).transpose()
             else:
                 df_data = pd.concat([df_data, pd.read_json(p).transpose()], axis=0)
-        df_data.frame = [v.replace('osher/catkin_ws/src/allsight/dataset', f"{pc_name}/RVL-adapted-allsight/allsight_dataset") for v in df_data.frame]
-        df_data.ref_frame = [v.replace('osher/catkin_ws/src/allsight/dataset', f"{pc_name}/RVL-adapted-allsight/allsight_dataset") for v in df_data.ref_frame]
 
         data_no_touch = df_data[df_data.ref_frame == df_data.frame]
         data_no_touch['touch'] = 0
 
         if finetune:
-            path_to_finetuned = f'/home/{pc_name}/RVL-adapted-allsight/allsight_dataset/data_classify/no_touch/' \
+            path_to_finetuned = f'/home/{pc_name}/catkin_ws/src/allsight/dataset/data_classify/no_touch/' \
                                 'data_2023_02_07-12:12:16/data_2023_02_07-12:12:16.json'
             finetuned_no_touch = pd.read_json(path_to_finetuned).transpose()
             finetuned_no_touch['touch'] = 0
